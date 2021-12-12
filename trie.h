@@ -1,6 +1,6 @@
 #ifndef TRIE
 #define TRIE
-// Had to include all code here due to templats, g++ create typebased code from this template so all of the code's presence is required
+// Had to include all code here due to templates, compiler creates typebased code from this template so all of the code's presence is required
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -15,7 +15,18 @@ class Trie
 
 public:
     Trie();
+    /**
+     * @brief overloaded subscript operator that can be used to refer existing data and also create new entries for the trie
+     * 
+     * @param key the string key
+     * @return T& -> the reference to the data created or retrieved
+     */
     T &operator[](const string &key);
+    /**
+     * @brief deletes the data with the give key value, does not throw excpetion if key is not present
+     * 
+     * @param key 
+     */
     void erase(const string &key);
     ~Trie();
 };
