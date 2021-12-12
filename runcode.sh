@@ -1,4 +1,4 @@
 #!/bin/bash
-g++ ./trie.cpp -o trie
-valgrind --tool=memcheck --leak-check=full ./trie
-rm ./trie
+g++ main.cpp -o main
+valgrind --tool=memcheck --leak-check=full ./main
+rm ./main

@@ -1,3 +1,6 @@
+#ifndef TRIE
+#define TRIE
+// Had to include all code here due to templats, g++ create typebased code from this template so all of the code's presence is required
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -8,10 +11,12 @@ class Trie
     vector<Trie *> childrens;
     Trie<T> *search(const string &key);
     T &insert(const string &key, const T &data);
+    static bool onlyOneNotNull(Trie<T> *node);
 
 public:
     Trie();
     T &operator[](const string &key);
+    void erase(const string &key);
     ~Trie();
 };
 
@@ -73,6 +78,17 @@ Trie<T>::~Trie()
 }
 
 template <typename T>
+bool Trie<T>::onlyOneNotNull(Trie<T> *node)
+{
+    int notNullCount = 0;
+    for (auto ptr : node->childrens)
+        if (ptr != nullptr)
+            notNullCount++;
+
+    return notNullCount == 1;
+}
+
+template <typename T>
 T &Trie<T>::operator[](const string &key)
 {
     auto ptr = search(key);
@@ -82,23 +98,23 @@ T &Trie<T>::operator[](const string &key)
     return ptr->data;
 }
 
-int main()
+template <typename T>
+void Trie<T>::erase(const string &key)
 {
-    auto pairTrie = Trie<pair<int, int>>();
-    pairTrie["abc"] = {1, 2};
-    pairTrie["abc"] = {2, 3};
-    cout << pairTrie["abc"].first << " " << pairTrie["abc"].second << endl;
-    pairTrie["adb"] = {4, 5};
-    pairTrie["adb"] = {5, 6};
-    cout << pairTrie["abcd"].first << " " << pairTrie["abcd"].second << endl;
+    if (search(key) == nullptr)
+        return;
 
-    auto stringTrie = Trie<string>();
-    stringTrie["abc"] = "chihuahua";
-    stringTrie["abc"] = "hello";
-    cout << stringTrie["abc"] << endl;
-    stringTrie["adb"] = "woof";
-    stringTrie["adb"] = "world";
-    cout << stringTrie["abcd"] << endl;
+    int idx = 0;
+    auto node = this;
 
-    return 0;
+    while (idx < key.size() && !onlyOneNotNull(node))
+    {
+        node = (node->childrens)[key[idx] - 'a'];
+        idx++;
+    }
+
+    delete (node->childrens)[key[idx] - 'a'];
+    (node->childrens)[key[idx] - 'a'] = nullptr;
 }
+
+#endif
